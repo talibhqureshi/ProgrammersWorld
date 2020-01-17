@@ -1,0 +1,73 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>ProgrammersWorld.com | Signup</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand" href="#">ProgrammersWorld</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Signup <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class='container'>
+            <div class='jumbotron'>
+                <h1 class='text-center text-primary'>Signup To Begin Your Journey</h1>
+                <br>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class='form-group'>
+                        <label><b>Username</b></label>
+                        {{ form.username }}
+                        <span style="color: red;">{{ form.errors.username }}</span>
+                    </div>
+                    <div class='form-group'>
+                        <label><b>First Name</b></label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class='form-group'>
+                        <label><b>Last Name</b></label>
+                        {{ form.last_name }}
+                    </div>
+                    <div class='form-group'>
+                        <label><b>Email</b></label>
+                        {{ form.email }}
+                        <span style="color: red;">{{ form.errors.email }}</span>
+                    </div>
+                    <div class='form-group'>
+                        <label><b>Password</b></label>
+                        {{ form.password }}
+                        <span style="color: red;">{{ form.errors.password }}</span>
+                    </div>
+                    <div class='form-group'>
+                        <label><b>Confirm Password</b></label>
+                        {{ form.cnf_password }}
+                        <span style="color: red;">{{ form.errors.cnf_password }}</span>
+                    </div>
+                    <br>
+                    <input class='btn btn-success btn-sm' type="submit" value='signup'>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
