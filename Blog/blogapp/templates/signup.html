@@ -34,35 +34,39 @@
                 <h1 class='text-center text-primary'>Signup To Begin Your Journey</h1>
                 <br>
 
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class='form-group'>
                         <label><b>Username</b></label>
-                        {{ form.username }}
-                        <span style="color: red;">{{ form.errors.username }}</span>
+                        {{ user_form.username }}
+                        <span style="color: red;">{{ user_form.errors.username }}</span>
                     </div>
                     <div class='form-group'>
                         <label><b>First Name</b></label>
-                        {{ form.first_name }}
+                        {{ user_form.first_name }}
                     </div>
                     <div class='form-group'>
                         <label><b>Last Name</b></label>
-                        {{ form.last_name }}
+                        {{ user_form.last_name }}
                     </div>
                     <div class='form-group'>
                         <label><b>Email</b></label>
-                        {{ form.email }}
-                        <span style="color: red;">{{ form.errors.email }}</span>
+                        {{ user_form.email }}
+                        <span style="color: red;">{{ user_form.errors.email }}</span>
                     </div>
                     <div class='form-group'>
                         <label><b>Password</b></label>
-                        {{ form.password }}
-                        <span style="color: red;">{{ form.errors.password }}</span>
+                        {{ user_form.password }}
+                        <span style="color: red;">{{ user_form.errors.password }}</span>
                     </div>
                     <div class='form-group'>
                         <label><b>Confirm Password</b></label>
-                        {{ form.cnf_password }}
-                        <span style="color: red;">{{ form.errors.cnf_password }}</span>
+                        {{ user_form.cnf_password }}
+                        <span style="color: red;">{{ user_form.errors.cnf_password }}</span>
+                    </div>
+                    <div class='form-group'>
+                        <label><b>Profile Pic</b></label>
+                        {{ profile_form.profile }}
                     </div>
                     <br>
                     <input class='btn btn-success btn-sm' type="submit" value='signup'>

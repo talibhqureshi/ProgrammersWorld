@@ -90,7 +90,7 @@ class CreateBlogForm(forms.ModelForm):
 		}  		
 
 
-class UpdateProfileForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile

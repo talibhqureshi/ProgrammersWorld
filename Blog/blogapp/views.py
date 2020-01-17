@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from .forms import UserSignupForm, UserLoginForm, CreateBlogForm, UpdateProfileForm
+from .forms import UserSignupForm, UserLoginForm, CreateBlogForm, UserProfileForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Blog
+from .models import Blog, UserProfile
 
 def home(request):
 	keyword = request.GET.get('keyword','')
@@ -19,24 +19,23 @@ def home(request):
 
 def user_signup(request):
 	if request.method == 'POST':
-		form = UserSignupForm(request.POST)
-		if form.is_valid():
-			clean_data = form.cleaned_data
-			username = clean_data['username']
-			first_name = clean_data['first_name']
-			last_name = clean_data['last_name']
-			email = clean_data['email']
-			password = clean_data['password']
-			user = User.objects.create(username=username,first_name=first_name,last_name=last_name,email=email)
-			user.set_password(password)
+		user_form = UserSignupForm(request.POST)
+		profile_form = UserProfileForm(request.POST,request.FILES)
+		if user_form.is_valid() and profile_form.is_valid():
+			user = user_form.save(commit=False)
+			user.set_password(user_form.cleaned_data['password'])
 			user.save()
+			profile = profile_form.save(commit=False)
+			profile.user = user
+			profile.save()
 			messages.success(request,'!! Signup Successfull Please Login !!')
 			return HttpResponseRedirect(reverse('login'))
 		else:
-			return render(request,'signup.html',{'form':form})
+			return render(request,'signup.html',{'user_form':user_form,'profile_form':profile_form})
 
-	form = UserSignupForm()
-	return render(request,'signup.html',{'form':form})
+	user_form = UserSignupForm()
+	profile_form = UserProfileForm()
+	return render(request,'signup.html',{'user_form':user_form,'profile_form':profile_form})
 
 
 def user_login(request):
@@ -49,7 +48,7 @@ def user_login(request):
 			user = authenticate(username=username,password=password)
 			if user:
 				login(request,user)
-				return HttpResponseRedirect(reverse('create_blog'))	
+				return HttpResponseRedirect(reverse('show_blogs'))	
 		else:
 			return render(request,'login.html',{'form':form})
 
@@ -67,7 +66,8 @@ def user_logout(request):
 def show_blogs(request):
 	user = request.user
 	blogs = Blog.objects.filter(author=user)
-	return render(request,'show_blogs.html',{'blogs':blogs})
+	user_profile = UserProfile.objects.get(user=user)
+	return render(request,'show_blogs.html',{'blogs':blogs,'user_profile':user_profile})
 
 
 @login_required
@@ -75,19 +75,11 @@ def create_blog(request):
 	if request.method == 'POST':
 		form = CreateBlogForm(request.POST)
 		if form.is_valid():
-			title = form.cleaned_data['title']
-			content = form.cleaned_data['content']
-			Blog.objects.create(title=title,content=content,author=request.user)
+			blog = form.save(commit=False)
+			blog.author = request.user
+			blog.save()
 			messages.success(request,'You Created a New Blog')
 			return HttpResponseRedirect(reverse('show_blogs'))
 
 	form = CreateBlogForm()
-	return render(request,'create_blog.html',{'form':form})
-
-
-@login_required
-def user_profile(request):
-	user_form = UserSignupForm()
-	profile_form = UpdateProfileForm()
-	return render(request,'user_profile.html',{'user_form':user_form,'profile_form':profile_form})
-	
+	return render(request,'create_blog.html',{'form':form})	
